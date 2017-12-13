@@ -19,7 +19,6 @@ import com.teama.mapsubsystem.data.Floor;
 import com.teama.mapsubsystem.data.Location;
 import com.teama.mapsubsystem.data.MapNode;
 import com.teama.translator.Translator;
-import foodRequest.FoodRequest;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -70,6 +69,11 @@ public class MainMapScreen implements Initializable {
     @FXML private Pane searchPane;
 
     @FXML
+    private ImageView lanBtn;
+
+
+
+    @FXML
     private JFXComboBox<String> searchBar;
 
     @FXML
@@ -90,6 +94,7 @@ public class MainMapScreen implements Initializable {
 
     @FXML
     private ImageView directionsButton;
+
     @FXML
     HBox hbxDrawerBox;
 
@@ -152,7 +157,6 @@ public class MainMapScreen implements Initializable {
         // Make a pop up on the user's mouse cursor every time a node is clicked
         popUpID = mapDrawing.attachClickedListener(event -> generateNodePopUp(event), ClickedListener.LOCCLICKED);
         //will need to change this to create the child in the drawer and adjust the drawer
-
         // Pop up goes away on a floor switch
         mapDrawing.attachFloorChangeListener((a, b, c) -> removeCurrentPopUp());
 
@@ -217,6 +221,8 @@ public class MainMapScreen implements Initializable {
             setLoginVisibility();
         });
         setLoginVisibility();
+        System.out.println("Initializing");
+
     }
 
     private void setLoginVisibility() {
@@ -282,7 +288,7 @@ public class MainMapScreen implements Initializable {
                 drawer.setVisible(true);
                 FXMLLoader openerLoader = new FXMLLoader();
                 curController = new DirectionController();
-                //openerLoader.setResources(Translator.getInstance().getNewBundle());
+                openerLoader.setResources(Translator.getInstance().getNewBundle());
                 openerLoader.setLocation(getClass().getResource(curController.getFXMLPath()));
                 openerLoader.setController(curController);
                 openerLoader.load();
@@ -480,6 +486,7 @@ public class MainMapScreen implements Initializable {
         Stage aboutPopUp = new Stage();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/AboutPage.fxml"));
+        loader.setResources(Translator.getInstance().getNewBundle());
         try {
             Parent root = (Parent) loader.load();
             Scene aboutScene = new Scene(root);
@@ -501,6 +508,8 @@ public class MainMapScreen implements Initializable {
         Stage helpPopUp = new Stage();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/HelpPage.fxml"));
+        loader.setResources(Translator.getInstance().getNewBundle());
+
         try {
             Parent root = (Parent) loader.load();
             Scene helpScene = new Scene(root);
@@ -508,6 +517,26 @@ public class MainMapScreen implements Initializable {
             helpPopUp.resizableProperty().set(false);
             helpPopUp.initModality(Modality.WINDOW_MODAL);
             helpPopUp.showAndWait();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+    }
+
+    @FXML
+    void onLanBtnClicked(MouseEvent event) {
+        Stage languages = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/LanguagesPopOut.fxml"));
+        Translator.getInstance().setLang("all");
+        loader.setResources(Translator.getInstance().getNewBundle());
+        try {
+            Parent root = (Parent) loader.load();
+            Scene helpScene = new Scene(root);
+            languages.setScene(helpScene);
+            languages.resizableProperty().set(false);
+            languages.initModality(Modality.WINDOW_MODAL);
+            languages.showAndWait();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
